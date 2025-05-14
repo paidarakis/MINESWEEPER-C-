@@ -110,7 +110,7 @@ void printBoard(bool revealAll = false) {
         }
         cout << '\n';
     }
-    cout << "\nNarkes pou apokalypthkan: " << apnarkes << "  Kelia me shmaia: " << kelsim << "  Ypoleipomenes narkes: " << ypnarkes << '\n';
+    cout << "\nKelia pou apokalypthkan: " << apnarkes << "  Kelia me shmaia: " << kelsim << "  Ypoleipomenes narkes: " << ypnarkes << '\n';
 }
 
 // Elegxei an exei kerdisei o paiktis
