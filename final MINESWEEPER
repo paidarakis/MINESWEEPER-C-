@@ -1,0 +1,90 @@
+// Simeio eisodou tou programmatos
+int main() {
+    printMessage(); // Emfanisi kalosorismatos
+
+    while(true){
+        resetGame(); // Nea arxi
+
+        while(true){
+            printBoard();
+
+            char action;
+            int r, c;
+            cout << "Eisagete energeia (r gia reveal, f gia flag, u gia unflag) kai suntetagmenes (p.x., r 3 5): ";
+            cin >> action >> r >> c;
+
+            // Proto click: topothetountai oi narkes
+            if(firstClick){
+                if(action != 'r'){
+                    cout << "You must reveal a cell on your first turn.\n" << endl;
+                    continue;
+                }
+                plnarkes(r, c);
+                firstClick = false;
+            }
+
+            if(!inBounds(r, c)){
+                cout << "Lathos stoixeia.\n" << endl;
+                continue;
+            }
+
+            // Energeies paikti
+            if(action == 'r') {
+                if(flagged[r][c]){
+                    cout << "Den mporei na apokalyftei ena flagged tetragwno. Bgalte thn shmaia prwta.\n" << endl;
+                    continue;
+                }
+                if(narkes[r][c]){
+                    clearScreen();
+                    printBoard(true);
+                    cout << "Exases :(\n";
+                    break;
+                }
+                keli(r, c); // Apokalupsi
+            } else if(action == 'f') {
+                if(revealed[r][c]) {
+                    cout << "Den mporeis na baleis shmaia se mia perioxh pou exei hdh apokaluftei.\n" << endl;
+                    continue;
+                }
+                if(!flagged[r][c]){
+                    flagged[r][c] = true;
+                    kelsim++;
+                    ypnarkes--;
+                }
+            } else if(action == 'u') {
+                if (flagged[r][c]) {
+                    flagged[r][c] = false;
+                    kelsim--;
+                    ypnarkes++;
+                }
+            } else {
+                cout << "Lathos epilogh. Xrhshmopoihse 'r', 'f', h 'u'.\n" << endl;
+                continue;
+            }
+
+            // Elegxos nikis
+            if(isWin()){
+                clearScreen();
+                printBoard(true);
+                cout << "Kerdises!\n" << endl;
+                break;
+            }
+        }
+
+        // Paikse xana?
+        char playagain;
+        cout << "Thelete na paiksete pali? (y/n): ";
+        cin >> playagain;
+
+        if(playagain == 'n' || playagain == 'N'){
+            break;
+        } else if(playagain == 'y' || playagain == 'Y'){
+            clearScreen();
+            printMessage();
+        } else {
+            cout << "Parakalw dwste mia apo tis epiloges (y/n)." << endl;
+        }
+    }
+
+    return 0;
+}
