@@ -9,8 +9,8 @@ Windows υπολογιστής
 - Τερματικό (Command Prompt)
 ### Βήματα
 1. **Κατέβασε τον κώδικα**
-Είτε με 'git clone https://github.com/paidarakis/Minesweeper-Cpp.git
+Είτε με 'git clone https://github.com/paidarakis/Minesweeper-C-.git
 Η κατέβασε το '.zip και κάνε extract
-2. **Μεταγλώττισε τον κώδικα»:
+2. <<Μεταγλώττισε τον κώδικα>>:
 Αν έχεις g++, άνοιξε το Command Prompt στο φάκελο και εκτέλεσε:```bash
 g++ -o minesweeper minesweeper.cpp
