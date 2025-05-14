@@ -1,3 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <windows.h>
+using namespace std;
+
+// Διαστάσεις πίνακα και αριθμός ναρκών
+const int seires = 9;
+const int stiles = 9;
+const int narkescount = 10;
+
+// Πίνακες κατάστασης του παιχνιδιού
+vector<vector<char>> board(seires, vector<char>(stiles, '-'));          // Πίνακας προβολής (ό,τι βλέπει ο παίκτης)
+vector<vector<bool>> revealed(seires, vector<bool>(stiles, false));    // Αν έχει αποκαλυφθεί ένα κελί
+vector<vector<bool>> narkes(seires, vector<bool>(stiles, false));      // Πού υπάρχουν νάρκες
+vector<vector<bool>> flagged(seires, vector<bool>(stiles, false));     // Πού έχουν τοποθετηθεί σημαίες
+
+// Μεταβλητές στατιστικών
+int apnarkes = 0;       // Πόσα κελιά έχουν αποκαλυφθεί
+int kelsim = 0;         // Πόσα κελιά έχουν σημαίες
+int ypnarkes = narkescount;  // Πόσες νάρκες απομένουν (υπολογισμός με βάση σημαίες)
+bool firstClick = true; // Για να τοποθετηθούν οι νάρκες μετά το πρώτο click
+
+// Καθαρίζει την οθόνη
+void clearScreen() {
+    system("cls");
+}
+
+// Εμφανίζει το αρχικό μήνυμα καλωσορίσματος
+void printMessage() {
+    cout << "\t\t" << "----------------------------\n";
+    cout << "\t\t" << "  Welcome to MINESWEEPER!  \n";
+    cout << "\t\t" << "----------------------------\n";
+    cout << "\n";
+    cout << "Stoxos: Apokalypste ola ta tetragwna pou den exoun narkh.\n";
+    cout << "Prosoxh: Kanontas click se narkh teleiwnei to paixnidi.\n" << endl;
+}
+
+// Έλεγχος αν οι συντεταγμένες είναι εντός ορίων
+bool inBounds(int r, int c) {
+    return r >= 0 && r < seires && c >= 0 && c < stiles;
+}
+
+// Υπολογίζει πόσες νάρκες υπάρχουν γύρω από το κελί
+int countAdjacentMines(int r, int c) {
+    int count = 0;
+    for(int dr = -1; dr <= 1; ++dr)
+        for(int dc = -1; dc <= 1; ++dc)
+            if(inBounds(r + dr, c + dc) && narkes[r + dr][c + dc])
+                ++count;
+    return count;
+}
+
+//Apokaluptei ena keli kai Αποκαλύπτει ένα κελί και αναδρομικά γειτονικά αν δεν έχει νάρκες δίπλα
+void keli(int r, int c){
+    if (!inBounds(r, c) || revealed[r][c] || flagged[r][c]) return;
+
+    revealed[r][c] = true;
+    apnarkes++;
+
+    int mineCount = countAdjacentMines(r, c);
+
+    if(mineCount > 0){
+        board[r][c] = '0' + mineCount;
+    }else{
+        board[r][c] = ' ';
+    }
+
+    if(mineCount == 0){
+        for(int dr = -1; dr <= 1; ++dr)
+            for(int dc = -1; dc <= 1; ++dc)
+                keli(r + dr, c + dc);
+    }
+}
+
 // Simeio eisodou tou programmatos
 int main() {
     printMessage(); // Emfanisi kalosorismatos
