@@ -6,29 +6,29 @@
 #include <windows.h>
 using namespace std;
 
-// Διαστάσεις πίνακα και αριθμός ναρκών
+//Diastaseis pinaka kai arithmos narkon
 const int seires = 9;
 const int stiles = 9;
 const int narkescount = 10;
 
-// Πίνακες κατάστασης του παιχνιδιού
-vector<vector<char>> board(seires, vector<char>(stiles, '-'));          // Πίνακας προβολής (ό,τι βλέπει ο παίκτης)
-vector<vector<bool>> revealed(seires, vector<bool>(stiles, false));    // Αν έχει αποκαλυφθεί ένα κελί
-vector<vector<bool>> narkes(seires, vector<bool>(stiles, false));      // Πού υπάρχουν νάρκες
-vector<vector<bool>> flagged(seires, vector<bool>(stiles, false));     // Πού έχουν τοποθετηθεί σημαίες
+//Pinakes katastasis tou paixnidiou
+vector<vector<char>> board(seires, vector<char>(stiles, '-'));          //Pinakas provolis (oti vlepei o paikths)
+vector<vector<bool>> revealed(seires, vector<bool>(stiles, false));    //An exei apokalufhthei ena keli
+vector<vector<bool>> narkes(seires, vector<bool>(stiles, false));      //Pou uparxoun narkes
+vector<vector<bool>> flagged(seires, vector<bool>(stiles, false));     //Pou exoun topothetithei simaies
 
-// Μεταβλητές στατιστικών
-int apnarkes = 0;       // Πόσα κελιά έχουν αποκαλυφθεί
-int kelsim = 0;         // Πόσα κελιά έχουν σημαίες
-int ypnarkes = narkescount;  // Πόσες νάρκες απομένουν (υπολογισμός με βάση σημαίες)
-bool firstClick = true; // Για να τοποθετηθούν οι νάρκες μετά το πρώτο click
+//Metavlites statistikon
+int apnarkes = 0;       // Posa kelia exoun apokalufhthei
+int kelsim = 0;         // Posa kelia exoun simaies
+int ypnarkes = narkescount;  // Poses narkes apomenoun (upologismos me vasi simaies)
+bool firstClick = true; // Gia na topothetithoun oi narkes meta to proto click
 
-// Καθαρίζει την οθόνη
+//Katharizei tin othoni
 void clearScreen() {
     system("cls");
 }
 
-// Εμφανίζει το αρχικό μήνυμα καλωσορίσματος
+//Emfanizei to arxiko minimakalosorismatos
 void printMessage() {
     cout << "\t\t" << "----------------------------\n";
     cout << "\t\t" << "  Welcome to MINESWEEPER!  \n";
@@ -38,12 +38,12 @@ void printMessage() {
     cout << "Prosoxh: Kanontas click se narkh teleiwnei to paixnidi.\n" << endl;
 }
 
-// Έλεγχος αν οι συντεταγμένες είναι εντός ορίων
+//Elegxos an oi suntetagmenes einai entos oriwn
 bool inBounds(int r, int c) {
     return r >= 0 && r < seires && c >= 0 && c < stiles;
 }
 
-// Υπολογίζει πόσες νάρκες υπάρχουν γύρω από το κελί
+//Upologizei poses narkes uparxoun giro apo to keli
 int countAdjacentMines(int r, int c) {
     int count = 0;
     for(int dr = -1; dr <= 1; ++dr)
@@ -53,7 +53,7 @@ int countAdjacentMines(int r, int c) {
     return count;
 }
 
-//Apokaluptei ena keli kai Αποκαλύπτει ένα κελί και αναδρομικά γειτονικά αν δεν έχει νάρκες δίπλα
+//Apokaluptei ena keli kai anadromika geitonika an den exei narkes dipla
 void keli(int r, int c){
     if (!inBounds(r, c) || revealed[r][c] || flagged[r][c]) return;
 
@@ -74,6 +74,7 @@ void keli(int r, int c){
                 keli(r + dr, c + dc);
     }
 }
+
 // Topothetei tuxaia tis narkes, ektos tou prwtou click kai girw perioxis
 void plnarkes(int firstClickR, int firstClickC) {
     srand(time(0));
