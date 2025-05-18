@@ -1,3 +1,153 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <windows.h>
+#include <limits>
+using namespace std;
+
+//Orismos gia ta xrwmata
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+void setColor(int color) {
+    SetConsoleTextAttribute(hConsole, color);
+}
+
+//Xrwmatistika gia diaforetika simaia
+const int COLOR_DEFAULT = 7;   // Lefko
+const int COLOR_FLAG = 14;     // Kitrino
+const int COLOR_MINE = 12;     // Kokkino
+const int COLOR_NUMBER = 11;   // Kyrano
+const int COLOR_BORDER = 8;    // Grey
+
+// Μεταβλητές παιχνιδιού
+int seires, stiles, narkescount;
+vector<vector<char> > board;
+vector<vector<bool> > revealed, narkes, flagged;
+
+int apnarkes = 0, kelsim = 0, ypnarkes;
+bool firstClick = true;
+
+// Εργαλεία
+void clearScreen() { system("cls"); }
+
+//Emfanizei to arxiko mhnyma
+void printMessage(){
+    setColor(COLOR_BORDER);
+    cout << "\n=========================================\n";
+    setColor(COLOR_NUMBER);
+    cout << "          WELCOME TO MINESWEEPER!        \n";
+    setColor(COLOR_BORDER);
+    cout << "=========================================\n\n";
+    setColor(COLOR_DEFAULT);
+    cout << "Skopos: Apokalypste ola ta tetragwna pou den exoun narkh.\n";
+    cout << "Odigies:\n";
+    cout << "  r x y  -> Apokalyptete to keli sti grammi x, stin stilh y\n";
+    cout << "  f x y  -> Topothethsete mia shmaia se to tetragwno sti grammi x, stin stilh y\n";
+    cout << "  u x y  -> Afairete ti shmaia apo to tetragwno sti grammi x, stin stilh y\n";
+    cout << "Shmape: H proti kinisi prepei na einai apokalypsi (r).\n\n";
+}
+
+bool inBounds(int r, int c) {
+    return r >= 0 && r < seires && c >= 0 && c < stiles;
+}
+
+int countAdjacentMines(int r, int c) {
+    int count = 0;
+    for (int dr = -1; dr <= 1; ++dr)
+        for (int dc = -1; dc <= 1; ++dc)
+            if (inBounds(r + dr, c + dc) && narkes[r + dr][c + dc])
+                ++count;
+    return count;
+}
+
+void keli(int r, int c) {
+    if (!inBounds(r, c) || revealed[r][c] || flagged[r][c]) return;
+
+    revealed[r][c] = true;
+    apnarkes++;
+
+    int mineCount = countAdjacentMines(r, c);
+    board[r][c] = (mineCount > 0) ? '0' + mineCount : ' ';
+
+    if (mineCount == 0) {
+        for (int dr = -1; dr <= 1; ++dr)
+            for (int dc = -1; dc <= 1; ++dc)
+                keli(r + dr, c + dc);
+    }
+}
+
+void plnarkes(int firstClickR, int firstClickC) {
+    int placed = 0;
+    while (placed < narkescount) {
+        int r = rand() % seires;
+        int c = rand() % stiles;
+        if (!narkes[r][c] && !(abs(r - firstClickR) <= 1 && abs(c - firstClickC) <= 1)) {
+            narkes[r][c] = true;
+            ++placed;
+        }
+    }
+}
+
+void printBoard(bool revealAll = false) {
+    cout << "    ";
+    for (int c = 0; c < stiles; ++c)
+        cout << " " << c << "  ";
+    cout << "\n";
+
+    for (int r = 0; r < seires; ++r) {
+        cout << "   ";
+        for (int c = 0; c < stiles; ++c) cout << "+---";
+        cout << "+\n";
+
+        cout << " " << r << " ";
+        for (int c = 0; c < stiles; ++c) {
+            cout << "| ";
+            if (revealAll && narkes[r][c]) {
+                setColor(COLOR_MINE);
+                cout << "*";
+            } else if (flagged[r][c]) {
+                setColor(COLOR_FLAG);
+                cout << "F";
+            } else if (revealed[r][c]) {
+                if (narkes[r][c]) {
+                    setColor(COLOR_MINE);
+                    cout << "*";
+                } else {
+                    int num = board[r][c] - '0';
+                    if (num > 0) {
+                        setColor(COLOR_NUMBER);
+                        cout << num;
+                    } else {
+                        cout << " ";
+                    }
+                }
+            } else {
+                cout << "-";
+            }
+            setColor(COLOR_DEFAULT);
+            cout << " ";
+        }
+        cout << "|\n";
+    }
+
+    cout << "   ";
+    for (int c = 0; c < stiles; ++c) cout << "+---";
+    cout << "+\n";
+
+    cout << "\nNarkes pou apokalupthikan: " << apnarkes << " | Shmaies: " << kelsim << " | Ypolipomenes narkes: " << ypnarkes << "\n\n";
+}
+
+bool isWin() {
+    int revealedNonMines = 0;
+    for (int r = 0; r < seires; ++r)
+        for (int c = 0; c < stiles; ++c)
+            if (revealed[r][c] && !narkes[r][c])
+                ++revealedNonMines;
+
+    return revealedNonMines == seires * stiles - narkescount;
+}
+
 void playGame(int level) {
     switch (level) {
         case 1: seires = 5;  stiles = 5;  narkescount = 3;  break;
