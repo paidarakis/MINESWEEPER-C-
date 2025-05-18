@@ -4,7 +4,7 @@ Imagine turning your computer into a classic, fun puzzle game **Minesweeper** pl
 
 ---
 
-## 🎮 What Does the Code Do?
+##  What Does the Code Do?
 
 - **Builds a Game Grid:**  
   Creates a grid of tiny squares (cells). Some of these contain hidden mines (dangerous spots), while others are safe.
@@ -49,7 +49,7 @@ Imagine turning your computer into a classic, fun puzzle game **Minesweeper** pl
 
 ---
 
-## 📋 Requirements
+##  Requirements
 
 - A Windows PC (the program uses Windows-specific features for colors)
 - A C++ compiler supporting C++11 or newer
@@ -62,9 +62,9 @@ This project was developed and brought to life by:
 
 - **Alexandros Kozaris** — AEM: 23054
 - **Stefanos Skenteridis** — AEM: 23118
-- **Kostas Paidarakhs** — 
+- **Konstantinos Paidarakis** — AEM:23077
 
-## 🚀 How to Compile and Play
+##  How to Compile and Play
 
 Use your favorite compiler. For example, with **g++**:
 
