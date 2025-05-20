@@ -148,9 +148,6 @@ bool isWin() {
     return revealedNonMines == seires * stiles - narkescount;
 }
 
-void playGame(int level) {
-    switch (level) {
-        case 1: seires = 5;  stiles = 5;  narkescount = 3;  break;
         case 2: seires = 7;  stiles = 7;  narkescount = 8;  break;
         case 3: seires = 9;  stiles = 9;  narkescount = 15; break;
         case 4: seires = 12; stiles = 12; narkescount = 20; break;
