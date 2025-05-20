@@ -1,0 +1,149 @@
+        case 2: seires = 7;  stiles = 7;  narkescount = 8;  break;
+        case 3: seires = 9;  stiles = 9;  narkescount = 15; break;
+        case 4: seires = 12; stiles = 12; narkescount = 20; break;
+        case 5: seires = 15; stiles = 15; narkescount = 30; break;
+        default:
+            cout << "Lathos epipedo. Dialekse apo 1 ews 5.\n";
+            exit(1);
+    }
+
+    board = vector<vector<char> >(seires, vector<char>(stiles, '-'));
+    revealed = vector<vector<bool> >(seires, vector<bool>(stiles, false));
+    narkes = vector<vector<bool> >(seires, vector<bool>(stiles, false));
+    flagged = vector<vector<bool> >(seires, vector<bool>(stiles, false));
+
+    apnarkes = 0;
+    kelsim = 0;
+    ypnarkes = narkescount;
+    firstClick = true;
+}
+
+void resetGame() {
+    for (int r = 0; r < seires; ++r)
+        for (int c = 0; c < stiles; ++c) {
+            board[r][c] = '-';
+            revealed[r][c] = false;
+            narkes[r][c] = false;
+            flagged[r][c] = false;
+        }
+
+    apnarkes = 0;
+    kelsim = 0;
+    ypnarkes = narkescount;
+    firstClick = true;
+}
+
+int main() {
+    srand(time(0));
+
+
+    printMessage();
+
+    int level;
+    cout << "\nDialekse epipedo (1 - eukolo ews 5 - duskolo): " << endl;
+    cin >> level;
+
+    if (level > 5 || level < 0){
+        cout << "Lathos eisodos. Termatismos.\n";
+        return 1;
+    }
+
+    playGame(level);
+
+    while (true) {
+        resetGame();
+
+        while (true) {
+            printBoard();
+
+            char action;
+            int r, c;
+            cout << "Eisagete entolh (r/f/u) kai suntetagmenes (px r 3 5): ";
+            cin >> action >> r >> c;
+
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Lathos eisodos. Prospathiste ksana.\n";
+                continue;
+            }
+
+            if (firstClick) {
+                if (action != 'r') {
+                    cout << "Prepei na ksekiniseis me apokalupsi keliou.\n\n";
+                    continue;
+                }
+                plnarkes(r, c);
+                firstClick = false;
+            }
+
+            if (!inBounds(r, c)) {
+                cout << "Lathos suntetagmenes.\n\n";
+                continue;
+            }
+
+            if (action == 'r') {
+                if (flagged[r][c]) {
+                    cout << "Afaireste th shmaia gia na apokalupsete to keli.\n\n";
+                    continue;
+                }
+                if (narkes[r][c]) {
+                    clearScreen();
+                    printBoard(true);
+                    cout << "Exases :(\n";
+                    break;
+                }
+                keli(r, c);
+            } else if (action == 'f') {
+                if (revealed[r][c]) {
+                    cout << "Den mporeis na valeis shmaia se apokalumeno keli.\n\n";
+                    continue;
+                }
+                if (!flagged[r][c]) {
+                    flagged[r][c] = true;
+                    kelsim++;
+                    ypnarkes--;
+                }
+            } else if (action == 'u') {
+                if (flagged[r][c]) {
+                    flagged[r][c] = false;
+                    kelsim--;
+                    ypnarkes++;
+                }
+            } else {
+                cout << "Lathos entolh. H entolh prepei na einai 'r', 'f' h 'u'.\n\n";
+                continue;
+            }
+
+            if (isWin()) {
+                clearScreen();
+                printBoard(true);
+                cout << "Kerdises!\n\n";
+                break;
+            }
+        }
+
+        char playagain;
+        cout << "Thelete na paiksete pali? (y/n): ";
+        cin >> playagain;
+
+        if (playagain == 'n' || playagain == 'N') break;
+        clearScreen();
+
+        printMessage();
+
+		int level;
+	    cout << "Dialekse epipedo (1 - eukolo ews 5 - duskolo): ";
+	    cin >> level;
+
+	    if (level > 5 || level < 0){
+	        cout << "Lathos eisodos. Termatismos.\n";
+	        return 1;
+	    }
+
+	    playGame(level);
+
+    }
+
+    return 0;
+}
