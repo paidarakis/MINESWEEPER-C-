@@ -7,6 +7,7 @@
 #include <limits>
 using namespace std;
 
+
 //Orismos gia ta xrwmata
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 void setColor(int color) {
@@ -28,8 +29,10 @@ vector<vector<bool> > revealed, narkes, flagged;
 int apnarkes = 0, kelsim = 0, ypnarkes;
 bool firstClick = true;
 
-// Εργαλεία
-void clearScreen() { system("cls"); }
+//Cls function
+void clearScreen(){
+     system("cls");
+}
 
 //Emfanizei to arxiko mhnyma
 void printMessage(){
@@ -52,7 +55,8 @@ bool inBounds(int r, int c) {
     return r >= 0 && r < seires && c >= 0 && c < stiles;
 }
 
-int countAdjacentMines(int r, int c) {
+
+int countAdjacentMines(int r, int c){
     int count = 0;
     for (int dr = -1; dr <= 1; ++dr)
         for (int dc = -1; dc <= 1; ++dc)
@@ -148,7 +152,10 @@ bool isWin() {
     return revealedNonMines == seires * stiles - narkescount;
 }
 
-case 2: seires = 7;  stiles = 7;  narkescount = 8;  break;
+void playGame(int level) {
+    switch (level) {
+        case 1: seires = 5;  stiles = 5;  narkescount = 3;  break;
+        case 2: seires = 7;  stiles = 7;  narkescount = 8;  break;
         case 3: seires = 9;  stiles = 9;  narkescount = 15; break;
         case 4: seires = 12; stiles = 12; narkescount = 20; break;
         case 5: seires = 15; stiles = 15; narkescount = 30; break;
@@ -211,14 +218,14 @@ int main() {
             cout << "Eisagete entolh (r/f/u) kai suntetagmenes (px r 3 5): ";
             cin >> action >> r >> c;
 
-            if (cin.fail()) {
+            if (cin.fail()){
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Lathos eisodos. Prospathiste ksana.\n";
                 continue;
             }
 
-            if (firstClick) {
+            if (firstClick){
                 if (action != 'r') {
                     cout << "Prepei na ksekiniseis me apokalupsi keliou.\n\n";
                     continue;
@@ -227,24 +234,24 @@ int main() {
                 firstClick = false;
             }
 
-            if (!inBounds(r, c)) {
+            if (!inBounds(r, c)){
                 cout << "Lathos suntetagmenes.\n\n";
                 continue;
             }
 
-            if (action == 'r') {
-                if (flagged[r][c]) {
+            if(action == 'r'){
+                if(flagged[r][c]){
                     cout << "Afaireste th shmaia gia na apokalupsete to keli.\n\n";
                     continue;
                 }
-                if (narkes[r][c]) {
+                if(narkes[r][c]){
                     clearScreen();
                     printBoard(true);
                     cout << "Exases :(\n";
                     break;
                 }
                 keli(r, c);
-            } else if (action == 'f') {
+            }else if (action == 'f'){
                 if (revealed[r][c]) {
                     cout << "Den mporeis na valeis shmaia se apokalumeno keli.\n\n";
                     continue;
